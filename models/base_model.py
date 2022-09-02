@@ -2,12 +2,12 @@
 """ This module contains BaseModel class"""
 import uuid
 from datetime import datetime
+import models
 
 
 class BaseModel:
     """ This is Base Class from which other subclasses
-    will inherit
-    """
+    will inherit"""
     def __init__(self, *args, **kwargs):
         """ Initializes the objects with the following
         attributes during creations
@@ -42,6 +42,8 @@ class BaseModel:
         """ updates the public instance attribute updated_at with the
         current datetime"""
         self.updated_at = datetime.now()
+        models.storage.save()
+        models.storage.new(self)
 
     def to_dict(self):
         """returns a dictionary containing all keys/values of
