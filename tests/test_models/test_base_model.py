@@ -5,7 +5,8 @@ from datetime import datetime
 
 
 class test_BaseModel(unittest.TestCase):
-    def test_init(self,*args, **kwargs):
+    def test_init(self):
+        # to test if a BaseModel is initiated
         user = base_model.BaseModel()
         self.assertTrue(hasattr(user, "created_at"))
         self.assertTrue(hasattr(user, "updated_at"))
@@ -13,14 +14,14 @@ class test_BaseModel(unittest.TestCase):
         self.assertIsNotNone(user)
         self.assertIsInstance(user, BaseModel)
         user_dict = user.to_dict()
+
+        # to test if a BaseModel is initiated using kwargs
         my_new_user = base_model.BaseModel(**user_dict)
         self.assertTrue(hasattr(my_new_user, "created_at"))
         self.assertTrue(hasattr(my_new_user, "updated_at"))
         self.assertTrue(hasattr(my_new_user, "id"))
         self.assertIsNotNone(user)
         self.assertIsInstance(user, BaseModel)
-
-
 
     def test_save(self):
         user = base_model.BaseModel()

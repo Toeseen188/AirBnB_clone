@@ -5,6 +5,7 @@ from datetime import datetime
 import models
 
 
+
 class BaseModel:
     """ This is Base Class from which other subclasses
     will inherit"""
@@ -32,6 +33,7 @@ class BaseModel:
             self.id = str(uuid.uuid4())
             self.created_at = datetime.now()
             self.updated_at = datetime.now()
+            models.storage.new(self)
 
     def __str__(self):
         """ return the string when object is printed"""
@@ -43,7 +45,7 @@ class BaseModel:
         current datetime"""
         self.updated_at = datetime.now()
         models.storage.save()
-        models.storage.new(self)
+       # models.storage.new(self)
 
     def to_dict(self):
         """returns a dictionary containing all keys/values of
@@ -53,3 +55,4 @@ class BaseModel:
         my_dict['created_at'] = self.created_at.isoformat()
         my_dict['updated_at'] = self.updated_at.isoformat()
         return my_dict
+
