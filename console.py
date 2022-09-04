@@ -19,5 +19,6 @@ class HBNBCommand(cmd.Cmd):
         """ Ignore empty line, spaces and ENTER """
         pass
 
+
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
