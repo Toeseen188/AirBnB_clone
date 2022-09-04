@@ -6,7 +6,16 @@ from models.base_model import BaseModel
 
 
 class test_BaseModel(unittest.TestCase):
+
+    """
+    Unit test for the class BaseModel
+    """
     def test_init(self):
+
+        """
+        Unit test for the instantiation
+        of the BaseModel class
+        """
         # to test if a BaseModel is initiated
         user = base_model.BaseModel()
         self.assertTrue(hasattr(user, "created_at"))
@@ -25,6 +34,10 @@ class test_BaseModel(unittest.TestCase):
         self.assertIsInstance(user, BaseModel)
 
     def test_save(self):
+        """
+        unit test for the save method of
+        the BaseModel class
+        """
         user = base_model.BaseModel()
         user.updated_at = datetime(2018, 2, 28, 2, 6, 55,  258896)
         date1 = user.updated_at
@@ -33,6 +46,10 @@ class test_BaseModel(unittest.TestCase):
         self.assertNotEqual(date1, date2)
 
     def test_to_dict(self):
+        """
+        Unit test for the to_dict method of
+        the BaseModel class
+        """
         user = BaseModel()
         value_id = user.id
         value_created_at = user.created_at.isoformat()
