@@ -72,13 +72,13 @@ class HBNBCommand(cmd.Cmd):
                 raise IndexError()
             if arg[0] not in self.class_list:
                 raise NameError()
-            
+
             obj = storage.all()
 
             obj_key = arg[0] + "." + arg[1]
 
             if obj_key in obj:
-                print(obj[obj_key])
+                print(obj[obj_key].to_dict()["id"])
             else:
                 raise KeyError()
         except SyntaxError:
@@ -91,7 +91,7 @@ class HBNBCommand(cmd.Cmd):
             print("** no instance found **")
 
     def do_destroy(self, args):
-        """ Deletes an instance based on the class name and 
+        """ Deletes an instance based on the class name and
         id (save the change into the JSON file).
         Ex: $ destroy BaseModel 1234-1234-1234.
         Note:
@@ -114,7 +114,7 @@ class HBNBCommand(cmd.Cmd):
                 raise IndexError()
             if arg[0] not in self.class_list:
                 raise NameError()
-            
+
             obj = storage.all()
 
             obj_key = arg[0] + "." + arg[1]
@@ -136,7 +136,7 @@ class HBNBCommand(cmd.Cmd):
 
     def do_all(self, agrs):
         """ Prints all string representation of all instances based
-        or not on the class name. 
+        or not on the class name.
         Ex: $ all BaseModel or $ all.
         Note:
             => The printed result must be a list of strings
@@ -146,7 +146,7 @@ class HBNBCommand(cmd.Cmd):
         obj = storage.all()
         list_= []
         try:
-            if args: 
+            if args:
                 arg = args.split(" ")
                 if arg[0] not in self.class_list:
                     raise NameError()
@@ -154,10 +154,10 @@ class HBNBCommand(cmd.Cmd):
                     cls_name = obj_key.split(".")
                     if cls_name[0] == arg[0]:
                         print("{}".format(list_.append(obj[obj_key])))
-            
+
             for obj_key in obj:
                 print("{}".format(list_.append(obj[obj_key])))
-        
+
         except NameError:
             print("** class doesn't exist **")
 
