@@ -1,8 +1,7 @@
-#!/usr/bin/python3
-""" This module contains the commandline for AirBnB clone """
 import cmd
+import models
 from models import storage
-from models import BaseModel
+from models import BaseModel, FileStorage
 
 
 class HBNBCommand(cmd.Cmd):
@@ -132,35 +131,78 @@ class HBNBCommand(cmd.Cmd):
             print("** instance id missing **")
         except KeyError:
             print("** no instance found **")
-
-
-    def do_all(self, agrs):
-        """ Prints all string representation of all instances based
-        or not on the class name.
-        Ex: $ all BaseModel or $ all.
-        Note:
-            => The printed result must be a list of strings
-            => If the class name doesn’t exist, print ** class doesn't exist **
-            (ex: $ all MyModel)
+    def do_all(self, line):
         """
-        obj = storage.all()
-        list_= []
-        try:
-            if args:
-                arg = args.split(" ")
-                if arg[0] not in self.class_list:
-                    raise NameError()
-                for obj_key in obj:
-                    cls_name = obj_key.split(".")
-                    if cls_name[0] == arg[0]:
-                        print("{}".format(list_.append(obj[obj_key])))
+        Creates a new instance of BaseModel, saves it (to the JSON file)
+        and prints the id. Ex: $ create BaseModel.
+        Exceptions:
+            =>If the class name is missing, print ** class name missing **
+                (ex: $ create)
+            =>If the class name doesn’t exist, print ** class doesn't exist **
+                (ex: $ create MyModel)
+        """
+        args = line.split()
+        if len(args) == 0:
+            content = models.storage.all()
+            value_list = []
+            for key in content.keys():
+                value = content[key]
+                value_list.append(str(value))
+            print(value_list)
+        else:
+            if args[0] == "BaseModel":
+                content = models.storage.all()
+                value_list = []
+                for key in content.keys():
+                    value = content[key]
+                    value_list.append(str(value))
+                print (value_list)
+            else:
+                print("** class doesn't exist **")
 
-            for obj_key in obj:
-                print("{}".format(list_.append(obj[obj_key])))
+    def do_update(self, line):
+        args = line.split()
+        if len(args) == 0:
+            print("** class name missing **")
 
-        except NameError:
-            print("** class doesn't exist **")
+        if len(args) > 0:
+            if args[0] != "BaseModel":
+                print("** class doesn't exist **")
+            else:
+                if len(args) == 1:
+                    print("** instance id missing **")
+                else:
+                    if len(args) == 2:
+                        print("** attribute name missing **")
+                    else:
+                        if len(args) == 3:
+                            print("** value missing **")
+                        else:
+                            if len(args) >= 4 and args[0] == "BaseModel":
+                                # reload the private attribute __object of the FileStorage class
+                                FileStorage().reload()
+                                # get all the content of the __object using the all function
+                                content = FileStorage.all(FileStorage)
+                                value_input = "{}.{}".format("BaseModel", args[1])
+                                if content.get(value_input) is None:
+                                    print("** no instance found **")
+                                else:
+                                    # obtain the BaseModel from the json file using the id
+                                    obj = content[value_input]
+                                    # convert the obj to dictionary using the to_dict function in the BaseModel class
+                                    obj_to_dict = obj.to_dict()
 
+                                    # convert the attribute and value to a string
+                                    key = str(args[2])
+                                    value = str(args[3])
+
+                                    # update the existing dictionary(BaseModel)
+                                    obj_to_dict[key] = value
+
+                                    # convert the dictionary back to a BaseModel
+                                    new_base_model = BaseModel(**obj_to_dict)
+                                    # save to updated the updated_at attribute
+                                    new_base_model.save()
 
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
