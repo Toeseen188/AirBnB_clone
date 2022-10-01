@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 """ This module contain the file storage for the models"""
 from models.base_model import BaseModel
+from models.user import User
 import json
 
 
@@ -30,19 +31,15 @@ class FileStorage:
         """ sets in __objects the obj with key <obj class name>.id """
         if obj:
             key = "{}.{}".format(type(obj).__name__, obj.id)
-            # self.__objects[key] = obj
             self.__objects.update({key: obj})
-            my_dict = {}
-            for key, value in self.__objects.items():
-                my_dict[key] = value.to_dict()
-            with open(self.__file_path, 'w', encoding="UTF-8") as f:
-                json.dump(my_dict, f)
+            self.save()
 
     def save(self):
         """ serializes __objects to the JSON file (path: __file_path) """
         my_dict = {}
         for key, value in self.__objects.items():
-            my_dict[key] = value.to_dict()
+            my_dict.update({key: value.to_dict()})
+            #value.to_dict converts the value to json
         with open(self.__file_path, 'w', encoding="UTF-8") as f:
             json.dump(my_dict, f)
 
@@ -54,8 +51,11 @@ class FileStorage:
         """
         try:
             with open(self.__file_path, 'r', encoding="UTF-8") as f:
-                for key, value in (json.load(f)).items():
-                    value = eval(value["__class__"])(**value)
-                    self.__objects[key] = value
+                data = (json.load(f))
+                if data:
+                    for key, value in data.items():
+                        #convert back to class
+                        value = eval(value["__class__"])(**value)
+                        self.__objects[key] = value
         except FileNotFoundError:
             pass
